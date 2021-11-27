@@ -1,14 +1,17 @@
 defmodule SimpleGraph.Node do
   alias SimpleGraph.Node
 
+
+  @type graph_id :: String.t()
+
   @type t :: %__MODULE__{
-          adjacent: [Node.t()],
-          subgraphs: [Node.t()],
+          adjacent: [graph_id()],
+          subgraphs: [graph_id()],
           value: any(),
-          outgoing: [Node.t()],
-          incoming: [Node.t()],
+          outgoing: [graph_id()],
+          incoming: [graph_id()],
           id: binary(),
-          parent: Node.t() | nil
+          parent: graph_id() | nil
         }
 
   @enforce_keys [:value, :id]
@@ -32,15 +35,15 @@ defmodule SimpleGraph.Node do
   def add_node(self: %Node{} = self, outgoing: %Node{} = outgoing) do
     new_outgoing = %Node{
       outgoing
-      | adjacent: [self | outgoing.adjacent],
-        incoming: [self | outgoing.incoming]
+      | adjacent: [self.id | outgoing.adjacent],
+        incoming: [self.id | outgoing.incoming]
     }
 
     [
       self: %Node{
         self
-        | adjacent: [new_outgoing | self.adjacent],
-          outgoing: [new_outgoing | self.adjacent]
+        | adjacent: [new_outgoing.id | self.adjacent],
+          outgoing: [new_outgoing.id | self.adjacent]
       },
       outgoing: new_outgoing
     ]
@@ -49,23 +52,23 @@ defmodule SimpleGraph.Node do
   def add_node(self: %Node{} = self, incoming: %Node{} = incoming) do
     new_incoming = %Node{
       incoming
-      | outgoing: [self | incoming.outgoing],
-        adjacent: [self | incoming.adjacent]
+      | outgoing: [self.id | incoming.outgoing],
+        adjacent: [self.id | incoming.adjacent]
     }
 
     [
       self: %Node{
         self
-        | adjacent: [incoming | self.adjacent],
-          incoming: [incoming | self.incoming]
+        | adjacent: [incoming.id | self.adjacent],
+          incoming: [incoming.id | self.incoming]
       },
       incoming: new_incoming
     ]
   end
 
   def add_node(self: %Node{} = self, subgraph: %Node{} = sub) do
-    new_sub = %Node{sub | parent: self}
-    [self: %Node{self | subgraphs: [sub | self.subgraphs]}, subgraph: new_sub]
+    new_sub = %Node{sub | parent: self.id}
+    [self: %Node{self | subgraphs: [sub.id | self.subgraphs]}, subgraph: new_sub.id]
   end
 
   @spec remove_node(self: Node.t(), outgoing: Node.t(), incoming: Node.t(), subgraph: Nodet.t()) ::
@@ -75,15 +78,15 @@ defmodule SimpleGraph.Node do
   def remove_node(self: %Node{} = self, outgoing: %Node{} = outgoing) do
     new_outgoing = %Node{
       outgoing
-      | incoming: outgoing.incoming |> Enum.reject(fn x -> x.id == self.id end),
-        adjacent: outgoing.adjacent |> Enum.reject(fn x -> x.id == self.id end)
+      | incoming: outgoing.incoming |> Enum.reject(fn x -> x == self.id end),
+        adjacent: outgoing.adjacent |> Enum.reject(fn x -> x == self.id end)
     }
 
     [
       self: %Node{
         self
-        | outgoing: self.outgoing |> Enum.filter(&(&1.id == outgoing.id)),
-          adjacent: self.adjacent |> Enum.filter(&(&1.id == outgoing.id))
+        | outgoing: self.outgoing |> Enum.filter(&(&1 == outgoing.id)),
+          adjacent: self.adjacent |> Enum.filter(&(&1 == outgoing.id))
       },
       outgoing: new_outgoing
     ]
@@ -92,15 +95,15 @@ defmodule SimpleGraph.Node do
   def remove_node(self: %Node{} = self, incoming: %Node{} = incoming) do
     new_incoming = %Node{
       incoming
-      | outgoing: incoming.outgoing |> Enum.reject(&(&1.id == self.id)),
-        adjacent: incoming.adjacent |> Enum.reject(&(&1.id == self.id))
+      | outgoing: incoming.outgoing |> Enum.reject(&(&1 == self.id)),
+        adjacent: incoming.adjacent |> Enum.reject(&(&1 == self.id))
     }
 
     [
       self: %Node{
         self
-        | incoming: self.incoming |> Enum.reject(&(&1.id == incoming.id)),
-          adjacent: self.adjacent |> Enum.reject(&(&1.id == incoming.id))
+        | incoming: self.incoming |> Enum.reject(&(&1 == incoming.id)),
+          adjacent: self.adjacent |> Enum.reject(&(&1 == incoming.id))
       },
       incoming: new_incoming
     ]
@@ -110,7 +113,7 @@ defmodule SimpleGraph.Node do
     new_sub = %Node{subgraph | parent: nil}
 
     [
-      self: %Node{self | subgraphs: self.subgraphs |> Enum.reject(&(&1.id == subgraph.id))},
+      self: %Node{self | subgraphs: self.subgraphs |> Enum.reject(&(&1 == subgraph.id))},
       subgraph: new_sub
     ]
   end

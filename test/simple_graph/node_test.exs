@@ -26,7 +26,7 @@ defmodule SimpleGraph.NodeTest do
       next_node = node_with_params(%{adjacent: [], value: "nextvalue"})
       assert [self: new_self,outgoing: new_node] = Node.add_node(self: self_node, outgoing: next_node)
 
-      assert %Node{id: self_node.id,value: "selfnode", adjacent}
+
 
     end
   end
@@ -36,22 +36,23 @@ defmodule SimpleGraph.NodeTest do
       self_node = node_with_id( "testnode")
       root_node = node_with_id("selfnode")
 
-      assert %Node{value: "selfnode", adjacent: [root_node], incoming: [root_node], outgoing:  []} =
+      assert [self: %Node{value: "selfnode", adjacent: [self_node.id], incoming: [self_node.id], outgoing:  [],id: root_node.id},incoming: %Node{id: self_node.id,value: "testnode",adjacent: [root_node.id],outgoing: [root_node.id]}]==
                Node.add_node(self: root_node, incoming:  self_node)
     end
 
     test "Add node to graph" do
       self_node = node_with_params(%{adjacent: [node_with_params(%{adjacent: [], value: "firstvalue"})], value: "selfnode"})
       next_node = node_with_params(%{adjacent: [], value: "nextvalue"})
-      assert new_node = Node.add_node(self: self_node, incoming: next_node)
+      assert [self: new_self,incoming: new_incoming] = Node.add_node(self: self_node, incoming: next_node)
 
       assert [
                %Node{adjacent: [], value: "firstvalue", outgoing: [], incoming: [],id: self_node.id},
-               next_node
+               new_self
              ],
-             new_node.adjacent
+             new_incoming.adjacent
 
-      assert [next_node], new_node.incoming
+      assert [], new_incoming.incoming
+      assert [new_self],new_incoming.outgoing
     end
 
   end

@@ -1,4 +1,7 @@
 defmodule SimpleGraph do
+  @moduledoc """
+  A complete graph
+  """
   alias SimpleGraph.Node
   use Agent
   require Logger

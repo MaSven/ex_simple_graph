@@ -1,6 +1,9 @@
 defmodule SimpleGraph.Node do
-  alias SimpleGraph.Node
+  @moduledoc """
+  A Node in the graph. A node has directed edges to others nodes. These nodes are either in the `outgoing` or in the `incoming` list. All adjancy nodes are in the `adjacent` list.
+  """
 
+  alias SimpleGraph.Node
 
   @type graph_id :: String.t()
 

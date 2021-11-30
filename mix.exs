@@ -12,14 +12,13 @@ defmodule SimpleGraph.MixProject do
     ]
   end
 
-
-  defp elixirc_paths(:test), do: ["lib","test/helpers"]
+  defp elixirc_paths(:test), do: ["lib", "test/helpers"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger,:crypto]
+      extra_applications: [:logger, :crypto]
     ]
   end
 
@@ -28,7 +27,7 @@ defmodule SimpleGraph.MixProject do
     [
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
-      { :uuid, "~> 1.1" },
+      {:uuid, "~> 1.1"},
       {:mix_audit, "~> 1.0.0", only: [:dev, :test], runtime: false}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}

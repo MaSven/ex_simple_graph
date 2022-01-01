@@ -20,7 +20,13 @@ defmodule SimpleGraph do
     Agent.get(graph_name, fn %SimpleGraph{} = state -> state end)
   end
 
-  @spec add_node(graph: SimpleGraph.t(), name: atom(), node: binary(), outgoing: binary()) ::
+  @spec add_node(
+          graph: SimpleGraph.t(),
+          name: atom(),
+          node: binary(),
+          outgoing: binary(),
+          incoming: binary()
+        ) ::
           SimpleGraph.t()
   def add_node(name: name, node: node) when is_atom(name) do
     Agent.update(name, fn %SimpleGraph{} = graph ->
@@ -35,6 +41,27 @@ defmodule SimpleGraph do
     Agent.update(name, fn %SimpleGraph{} = graph ->
       add_node(graph: graph, node: node_id, outgoing: outgoing_id)
     end)
+  end
+
+  def add_node(name: name, node: node_id, incoming: incoming_id)
+      when is_atom(name) and is_binary(node_id) and is_binary(incoming_id) do
+    Logger.debug("Adding node #{name}, with first node #{node_id} and incoming #{incoming_id}")
+
+    Agent.update(name, fn %SimpleGraph{} = graph ->
+      add_node(graph: graph, node: node_id, incoming: incoming_id)
+    end)
+  end
+
+  def add_node(graph: %SimpleGraph{} = graph, node: node_id, incoming: incoming_id)
+      when is_binary(node_id) and is_binary(incoming_id) do
+    with {:ok, node} <- get_node(graph, node_id),
+         {:ok, incoming} <- get_node(graph, incoming_id) do
+      [{:self, new_node}, {:incoming, new_incoming}] =
+        Node.add_node(self: node, incoming: incoming)
+
+      put_node(graph, new_node)
+      |> put_node(new_incoming)
+    end
   end
 
   def add_node(graph: %SimpleGraph{} = graph, node: node_id, outgoing: outgoing_id)

@@ -3,5 +3,7 @@
 
 * TODO add nodes to grap
 :LOGBOOK:
-CLOCK: [2022-01-01 Sa 20:55]
+CLOCK: [2022-01-01 Sa 20:55]--[2022-01-01 Sa 21:40] =>  0:45
 :END:
+* TODO remove node
+* TODO edit node

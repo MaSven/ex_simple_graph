@@ -43,17 +43,64 @@ defmodule SimpleGraphTest do
                  ^node2_id => node_second
                }
              } = SimpleGraph.graph(graph_id)
+
       assert node.id == node_first.id
       assert node2.id == node_second.id
+
       assert [
-        node2.id
-      ] == node_first.adjacent
+               node2.id
+             ] == node_first.outgoing
+
       assert [
-        node1_id
-      ] == node_second.adjacent
+               node2.id
+             ] == node_first.adjacent
+
       assert [
-        node1_id
-      ] == node_second.incoming
+               node1_id
+             ] == node_second.adjacent
+
+      assert [
+               node1_id
+             ] == node_second.incoming
+    end
+
+    test "add incoming node", %{graph_name: graph_name, graph_id: graph_id} do
+      node = SimpleGraph.Node.create_node("test_value_1")
+      node2 = SimpleGraph.Node.create_node("test_value_2")
+      assert :ok = SimpleGraph.add_node(name: graph_id, node: node)
+      assert :ok = SimpleGraph.add_node(name: graph_id, node: node2)
+      assert :ok = SimpleGraph.add_node(name: graph_id, node: node.id, incoming: node2.id)
+
+      node1_id = node.id
+      node2_id = node2.id
+
+      assert %SimpleGraph{
+               id: ^graph_name,
+               name: ^graph_name,
+               nodes: %{
+                 ^node1_id => node_first,
+                 ^node2_id => node_second
+               }
+             } = SimpleGraph.graph(graph_id)
+
+      assert node.id == node_first.id
+      assert node2.id == node_second.id
+
+      assert [
+               node2.id
+             ] == node_first.incoming
+
+      assert [
+               node2.id
+             ] == node_first.adjacent
+
+      assert [
+               node1_id
+             ] == node_second.adjacent
+
+      assert [
+               node1_id
+             ] == node_second.outgoing
     end
   end
 

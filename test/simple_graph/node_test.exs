@@ -31,12 +31,17 @@ defmodule SimpleGraph.NodeTest do
     end
 
     test "Add node to graph" do
-      test_uuid = UUID.uuid4()
-      self_node = node_with_params(%{adjacent: [UUID.uuid4()], value: "selfnode"})
+      existing_uuid = UUID.uuid4()
+      self_node = node_with_params(%{adjacent: [existing_uuid], value: "selfnode"})
       next_node = node_with_params(%{adjacent: [], value: "nextvalue"})
 
-      assert [self: new_self, outgoing: new_node] =
-               Node.add_node(self: self_node, outgoing: next_node)
+      assert [self: root, outgoing: outgoing] =
+        Node.add_node(self: self_node, outgoing: next_node)
+      assert [next_node.id,existing_uuid] == root.adjacent
+      assert [next_node.id] == root.outgoing
+      assert [self_node.id] == outgoing.adjacent
+      assert [self_node.id] == outgoing.incoming
+
     end
   end
 

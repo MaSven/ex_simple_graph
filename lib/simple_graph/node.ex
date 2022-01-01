@@ -46,7 +46,7 @@ defmodule SimpleGraph.Node do
       self: %Node{
         self
         | adjacent: [new_outgoing.id | self.adjacent],
-          outgoing: [new_outgoing.id | self.adjacent]
+          outgoing: [new_outgoing.id | self.outgoing]
       },
       outgoing: new_outgoing
     ]

@@ -1,0 +1,7 @@
+#+TITLE: Todo
+
+
+* TODO add nodes to grap
+:LOGBOOK:
+CLOCK: [2022-01-01 Sa 20:55]
+:END:

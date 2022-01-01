@@ -74,7 +74,7 @@ defmodule SimpleGraph.Node do
     [self: %Node{self | subgraphs: [sub.id | self.subgraphs]}, subgraph: new_sub.id]
   end
 
-  @spec remove_node(self: Node.t(), outgoing: Node.t(), incoming: Node.t(), subgraph: Nodet.t()) ::
+  @spec remove_node(self: Node.t(), outgoing: Node.t(), incoming: Node.t(), subgraph: Node.t()) ::
           [self: Node.t(), outgoing: Node.t()]
           | [self: Node.t(), incoming: Node.t()]
           | [self: Node.t(), subgraph: Node.t()]

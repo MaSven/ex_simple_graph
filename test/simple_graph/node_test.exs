@@ -5,7 +5,7 @@ defmodule SimpleGraph.NodeTest do
   alias SimpleGraph.Node
   import SimpleGraph.Helpers.NodeHelper
 
-  describe "Test add outgoing" do
+  describe "Test add node" do
     test "Create empty graph" do
       self_node = node_with_id("testnode")
       root_node = node_with_id("selfnode")
@@ -36,16 +36,14 @@ defmodule SimpleGraph.NodeTest do
       next_node = node_with_params(%{adjacent: [], value: "nextvalue"})
 
       assert [self: root, outgoing: outgoing] =
-        Node.add_node(self: self_node, outgoing: next_node)
-      assert [next_node.id,existing_uuid] == root.adjacent
+               Node.add_node(self: self_node, outgoing: next_node)
+
+      assert [next_node.id, existing_uuid] == root.adjacent
       assert [next_node.id] == root.outgoing
       assert [self_node.id] == outgoing.adjacent
       assert [self_node.id] == outgoing.incoming
-
     end
-  end
 
-  describe "Test add incoming" do
     test "Create empty graph" do
       self_node = node_with_id("testnode")
       root_node = node_with_id("selfnode")
@@ -95,5 +93,8 @@ defmodule SimpleGraph.NodeTest do
       assert [], new_incoming.incoming
       assert [new_self], new_incoming.outgoing
     end
+  end
+
+  describe "Remvoe nodes" do
   end
 end

@@ -6,7 +6,7 @@ defmodule SimpleGraph.NodeTest do
   import SimpleGraph.Helpers.NodeHelper
 
   describe "Test add node" do
-    test "Create empty graph" do
+    test "with empty graph" do
       self_node = node_with_id("testnode")
       root_node = node_with_id("selfnode")
       self_id = self_node.id
@@ -30,7 +30,7 @@ defmodule SimpleGraph.NodeTest do
              } == outgoing_node
     end
 
-    test "Add node to graph" do
+    test "one node to another outgoing" do
       existing_uuid = UUID.uuid4()
       self_node = node_with_params(%{adjacent: [existing_uuid], value: "selfnode"})
       next_node = node_with_params(%{adjacent: [], value: "nextvalue"})
@@ -66,7 +66,7 @@ defmodule SimpleGraph.NodeTest do
                Node.add_node(self: root_node, incoming: self_node)
     end
 
-    test "Add node to graph" do
+    test "one node to another incoming" do
       self_node =
         node_with_params(%{
           adjacent: [node_with_params(%{adjacent: [], value: "firstvalue"})],

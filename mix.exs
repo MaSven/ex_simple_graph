@@ -8,7 +8,10 @@ defmodule SimpleGraph.MixProject do
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      description: description(),
+      package: package(),
+      source_url: "https://github.com/MaSven/ex_simple_graph"
     ]
   end
 
@@ -28,9 +31,27 @@ defmodule SimpleGraph.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:uuid, "~> 1.1"},
-      {:mix_audit, "~> 1.0.0", only: [:dev, :test], runtime: false}
+      {:mix_audit, "~> 1.0.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
   end
+
+  defp description() do
+    "A simple datastructure, that does not implement any algorithms for traversing the graph."
+  end
+
+  defp package() do
+    [
+      name: "simple_graph_datastructure",
+      licenses: ["AGPL 3.0"],
+      links: %{"Github" => "https://github.com/MaSven/ex_simple_graph"},
+      # These are the default files included in the package
+      files: ~w(lib .formatter.exs mix.exs README*  LICENSE*
+                 CHANGELOG*  ),
+
+    ]
+  end
+
 end

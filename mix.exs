@@ -11,7 +11,14 @@ defmodule SimpleGraph.MixProject do
       deps: deps(),
       description: description(),
       package: package(),
-      source_url: "https://github.com/MaSven/ex_simple_graph"
+      source_url: "https://github.com/MaSven/ex_simple_graph",
+      test_coverage: [tool: ExCoveralls],
+preferred_cli_env: [
+      coveralls: :test,
+      "coveralls.detail": :test,
+      "coveralls.post": :test,
+      "coveralls.html": :test
+    ]
     ]
   end
 
@@ -32,9 +39,8 @@ defmodule SimpleGraph.MixProject do
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:uuid, "~> 1.1"},
       {:mix_audit, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.14.4", only: :test,runtime: false},
     ]
   end
 
@@ -53,5 +59,8 @@ defmodule SimpleGraph.MixProject do
 
     ]
   end
+
+
+
 
 end

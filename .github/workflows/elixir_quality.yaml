@@ -33,7 +33,8 @@ jobs:
     - name: Credo run
       run: mix credo
     - name: Run tests
-      run: mix test
+      run: mix test --cover
+
   audit:
     runs-on: ubuntu-latest
     name: security audit

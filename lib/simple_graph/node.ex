@@ -13,7 +13,7 @@ defmodule SimpleGraph.Node do
           value: any(),
           outgoing: [graph_id()],
           incoming: [graph_id()],
-          id: binary(),
+          id: graph_id(),
           parent: graph_id() | nil
         }
 
@@ -71,7 +71,7 @@ defmodule SimpleGraph.Node do
 
   def add_node(self: %Node{} = self, subgraph: %Node{} = sub) do
     new_sub = %Node{sub | parent: self.id}
-    [self: %Node{self | subgraphs: [sub.id | self.subgraphs]}, subgraph: new_sub.id]
+    [self: %Node{self | subgraphs: [sub.id | self.subgraphs]}, subgraph: new_sub]
   end
 
   @spec remove_node(self: Node.t(), outgoing: Node.t(), incoming: Node.t(), subgraph: Node.t()) ::

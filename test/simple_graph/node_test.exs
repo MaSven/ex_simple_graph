@@ -1,5 +1,5 @@
 defmodule SimpleGraph.NodeTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest SimpleGraph.Node
 
   alias SimpleGraph.Node
@@ -93,6 +93,29 @@ defmodule SimpleGraph.NodeTest do
       assert [], new_incoming.incoming
       assert [new_self], new_incoming.outgoing
     end
+
+    test "as subgraph" do
+      first_node = node_with_id("parent-node")
+      second_node = node_with_id("child-node")
+      assert [self: first_node_edit,subgraph: second_node_edit] = Node.add_node(self: first_node,subgraph: second_node)
+      assert first_node.id == second_node_edit.parent
+      assert Enum.all?(first_node_edit.subgraphs,fn value -> value == second_node.id end)
+      assert length(first_node_edit.subgraphs) == 1
+
+    end
+
+    test "multi subgraphs" do
+      first_node = node_with_id("parent-node")
+      second_node = node_with_id("second-node")
+      third_node = node_with_id("third-node")
+      assert [self: first_node_edit,subgraph: second_node_edit] = Node.add_node(self: first_node,subgraph: second_node)
+      assert [self: first_node_edit,subgraph: third_node_edit] = Node.add_node(self: first_node_edit,subgraph: third_node)
+      assert length(first_node_edit.subgraphs) == 2
+      assert second_node_edit.parent == first_node.id
+      assert third_node_edit.parent == first_node.id
+      assert first_node_edit.subgraphs |> Enum.all?(&(&1 == second_node.id || &1 == third_node.id))
+    end
+
   end
 
   describe "Remvoe nodes" do
@@ -106,6 +129,7 @@ defmodule SimpleGraph.NodeTest do
       assert Node.empty?(first_node_edit)
       assert "node_without_adjacents" == first_node_edit.value
       assert Node.empty?(second_node_edit)
+
     end
 
     test "node which is outgoing" do

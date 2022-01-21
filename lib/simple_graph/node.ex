@@ -88,8 +88,8 @@ defmodule SimpleGraph.Node do
     [
       self: %Node{
         self
-        | outgoing: self.outgoing |> Enum.filter(&(&1 == outgoing.id)),
-          adjacent: self.adjacent |> Enum.filter(&(&1 == outgoing.id))
+        | outgoing: self.outgoing |> Enum.reject(&(&1 == outgoing.id)),
+          adjacent: self.adjacent |> Enum.reject(&(&1 == outgoing.id))
       },
       outgoing: new_outgoing
     ]
@@ -119,5 +119,22 @@ defmodule SimpleGraph.Node do
       self: %Node{self | subgraphs: self.subgraphs |> Enum.reject(&(&1 == subgraph.id))},
       subgraph: new_sub
     ]
+  end
+
+  @doc """
+  Defines if a node is empty.
+  A node is empty, if it has no `outgoing`,`incoming` and `subgraphs`. So if non other `Node` is connected to it or connects to it.
+  ## Examples
+    iex> SimpleGraph.Node.empty?(SimpleGraph.Node.create_node("name"))
+    true
+    iex>SimpleGraph.Node.empty?(%SimpleGraph.Node{id: "testid",value: "test-value",adjacent: [%SimpleGraph.Node{id: "secondid",value: "second-test-value"}] })
+    false
+  """
+  @spec empty?(Node.t()) :: true | false
+  def empty?(%Node{adjacent: [], incoming: [], outgoing: [], subgraphs: []}),
+    do: true
+
+  def empty?(%Node{}) do
+    false
   end
 end

@@ -13,12 +13,12 @@ defmodule SimpleGraph.MixProject do
       package: package(),
       source_url: "https://github.com/MaSven/ex_simple_graph",
       test_coverage: [tool: ExCoveralls],
-preferred_cli_env: [
-      coveralls: :test,
-      "coveralls.detail": :test,
-      "coveralls.post": :test,
-      "coveralls.html": :test
-    ]
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -40,7 +40,7 @@ preferred_cli_env: [
       {:uuid, "~> 1.1"},
       {:mix_audit, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.14.4", only: :test,runtime: false},
+      {:excoveralls, "~> 0.14.4", only: :test, runtime: false}
     ]
   end
 
@@ -55,12 +55,7 @@ preferred_cli_env: [
       links: %{"Github" => "https://github.com/MaSven/ex_simple_graph"},
       # These are the default files included in the package
       files: ~w(lib .formatter.exs mix.exs README*  LICENSE*
-                 CHANGELOG*  ),
-
+                 CHANGELOG*  )
     ]
   end
-
-
-
-
 end

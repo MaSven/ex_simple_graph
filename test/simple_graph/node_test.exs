@@ -96,5 +96,94 @@ defmodule SimpleGraph.NodeTest do
   end
 
   describe "Remvoe nodes" do
+    test "node not adjacent" do
+      first_node = node_with_id("node_without_adjacents")
+      second_node = node_with_id("second_node_without_adjacents")
+
+      assert [self: %Node{} = first_node_edit, outgoing: %Node{} = second_node_edit] =
+               Node.remove_node(self: first_node, outgoing: second_node)
+
+      assert Node.empty?(first_node_edit)
+      assert "node_without_adjacents" == first_node_edit.value
+      assert Node.empty?(second_node_edit)
+    end
+
+    test "node which is outgoing" do
+      first_node = node_with_id("first_value")
+      second_node = node_with_id("second_value")
+
+      [self: first_node_edit, outgoing: second_node_edit] =
+        Node.add_node(self: first_node, outgoing: second_node)
+
+      assert [self: first_node_removed, outgoing: second_node_removed] =
+               Node.remove_node(self: first_node_edit, outgoing: second_node_edit)
+
+      assert Node.empty?(first_node_removed)
+      assert Node.empty?(second_node_removed)
+    end
+
+    test "multiple nodes which are outgoing" do
+      first_node = node_with_id("first-value")
+      second_node = node_with_id("second-value")
+      third_node = node_with_id("third-value")
+
+      [self: first_node_edit, outgoing: second_node_edit] =
+        Node.add_node(self: first_node, outgoing: second_node)
+
+      [self: first_node_edit, outgoing: third_node_edit] =
+        Node.add_node(self: first_node_edit, outgoing: third_node)
+
+      [self: first_node_removed, outgoing: second_node_removed] =
+        Node.remove_node(self: first_node_edit, outgoing: second_node_edit)
+
+      assert Node.empty?(second_node_removed)
+      assert !Node.empty?(first_node_removed)
+      assert Enum.all?(first_node_removed.outgoing, fn value -> value == third_node.id end)
+
+      [self: first_node_removed, outgoing: third_node_removed] =
+        Node.remove_node(self: first_node_removed, outgoing: third_node_edit)
+
+      assert Node.empty?(first_node_removed)
+      assert Node.empty?(third_node_removed)
+    end
+
+    test "node which is incoming" do
+      first_node = node_with_id("first_value")
+      second_node = node_with_id("second_value")
+
+      [self: first_node_edit, incoming: second_node_edit] =
+        Node.add_node(self: first_node, incoming: second_node)
+
+      assert [self: first_node_removed, incoming: second_node_removed] =
+               Node.remove_node(self: first_node_edit, incoming: second_node_edit)
+
+      assert Node.empty?(first_node_removed)
+      assert Node.empty?(second_node_removed)
+    end
+
+    test "multiple nodes which are incoming" do
+      first_node = node_with_id("first-value")
+      second_node = node_with_id("second-value")
+      third_node = node_with_id("third-value")
+
+      [self: first_node_edit, incoming: second_node_edit] =
+        Node.add_node(self: first_node, incoming: second_node)
+
+      [self: first_node_edit, incoming: third_node_edit] =
+        Node.add_node(self: first_node_edit, incoming: third_node)
+
+      [self: first_node_removed, incoming: second_node_removed] =
+        Node.remove_node(self: first_node_edit, incoming: second_node_edit)
+
+      assert Node.empty?(second_node_removed)
+      assert !Node.empty?(first_node_removed)
+      assert Enum.all?(first_node_removed.incoming, fn value -> value == third_node.id end)
+
+      [self: first_node_removed, incoming: third_node_removed] =
+        Node.remove_node(self: first_node_removed, incoming: third_node_edit)
+
+      assert Node.empty?(first_node_removed)
+      assert Node.empty?(third_node_removed)
+    end
   end
 end
